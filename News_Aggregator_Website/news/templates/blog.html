@@ -1,0 +1,546 @@
+{% load static %}
+
+<!doctype html>
+<html class="no-js" lang="zxx">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>NewNew - Blog</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="SHORTCUT ICON" type="image/x-icon" href="{% static 'news/img/favicon.ico' %}">
+
+        <!-- CSS here -->
+
+        <link rel="stylesheet" href="{% static 'news/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'news/css/owl.carousel.min.css' %}">
+        <link rel="stylesheet" href="{% static 'news/css/flaticon.css' %}">
+        <link rel="stylesheet" href="{% static 'news/css/slicknav.css' %}">
+        <link rel="stylesheet" href="{% static 'news/css/animate.min.css' %}">
+        <link rel="stylesheet" href="{% static 'news/css/magnific-popup.css' %}">
+        <link rel="stylesheet" href="{% static 'news/css/fontawesome-all.min.css' %}">
+        <link rel="stylesheet" href="{% static 'news/css/themify-icons.css' %}">
+        <link rel="stylesheet" href="{% static 'news/css/slick.css' %}">
+        <link rel="stylesheet" href="{% static 'news/css/nice-select.css' %}">
+        <link rel="stylesheet" href="{% static 'news/css/style.css' %}">
+
+        <script>
+            const sleep = (milliseconds) => {
+                return new Promise(resolve => setTimeout(resolve, milliseconds))
+            }
+            
+            function ellipsizeTextBox(id) {
+                sleep(200).then(() => {
+                    var elts = document.getElementsByName(id);
+                    var i;
+                    for (i = 0; i < elts.length; i++) {
+                        var wordArray = elts[i].innerHTML.split(' ');
+                        while(elts[i].scrollHeight > elts[i].offsetHeight) {
+                            wordArray.pop();
+                            elts[i].innerHTML = wordArray.join(' ') + '...';
+                        }
+                    } 
+                })
+            }
+
+
+            function postForm(path, params, method) {
+                method = method || 'post';
+
+                var form = document.createElement('form');
+                form.setAttribute('method', method);
+                form.setAttribute('action', path);
+
+                for (var key in params) {
+                    if (params.hasOwnProperty(key)) {
+                        var hiddenField = document.createElement('input');
+                        hiddenField.setAttribute('type', 'hidden');
+                        hiddenField.setAttribute('name', key);
+                        hiddenField.setAttribute('value', params[key]);
+
+                        form.appendChild(hiddenField);
+                    }
+                }
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+
+            function searchRequest(page = 0) {
+                filter = {}
+                keyword = document.getElementById("s-keyword").value;
+
+                if(keyword != "") { filter['keyword'] = keyword }
+              
+                if ($('#s-cat-local').is(':checked') ||$('#s-cat-health').is(':checked') || $('#s-cat-sports').is(':checked')||$('#s-cat-politics').is(':checked') || $('#s-cat-tech').is(':checked')|| $('#s-cat-enter').is(':checked')) {
+                    filter['category']=""
+                }
+                if ($('#s-cat-local').is(':checked')) { filter['category'] += " local"; }
+                if ($('#s-cat-health').is(':checked')) { filter['category'] += " health"; }
+                if ($('#s-cat-sports').is(':checked')) { filter['category'] += " sports"; }
+                if ($('#s-cat-politics').is(':checked')) { filter['category'] += " politics"; }
+                if ($('#s-cat-tech').is(':checked')) { filter['category'] += " technology"; }
+                if ($('#s-cat-enter').is(':checked')) { filter['category'] += " entertainment"; }
+
+                if ($('#s-ref-medium').is(':checked') || $('#s-ref-onion').is(':checked')) { filter['reference']="" }
+                if ($('#s-ref-medium').is(':checked')) { filter['reference'] += " medium"; }
+                if ($('#s-ref-onion').is(':checked')) { filter['reference'] += " theonion"; }
+
+                if (page != 0) {
+                    filter['page']=page
+                }
+                postForm('http://127.0.0.1:8000/blog/', filter, 'GET');
+            }
+
+            function homeRequest(position) {
+                filter = {}
+                filter['position'] = position;
+                postForm('http://127.0.0.1:8000/home/', filter, 'GET');
+            }
+
+        </script>
+    </head>
+
+
+    <body onload="ellipsizeTextBox('ellipsable')">
+    <!-- Preloader Start -->
+    <div id="preloader-active">
+        <div class="preloader d-flex align-items-center justify-content-center">
+            <div class="preloader-inner position-relative">
+                <div class="preloader-circle"></div>
+                <div class="preloader-img pere-text">
+                    <img src="{% static 'news/img/logo/pre-logo.png' %}" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Preloader Start -->
+
+    <!-- Header Start -->
+    <header style="-webkit-box-shadow: 0 10px 15px rgba(25, 25, 25, 0.1); box-shadow: 0 10px 15px rgba(25, 25, 25, 0.1);">
+        <div id="headerSection" class="header-area" >
+                <div class="main-header " >
+                <div class="header-bottom  header-sticky" >
+                        <div class="container" >
+                            <div class="row align-items-center" >
+                                <!-- Logo -->
+                                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2" >
+                                    <div class="logo">
+                                    <a href="{% url 'home' %}"><img src="{% static 'news/img/logo/logo.png' %}" alt=""></a>
+                                    </div>
+                                </div>
+
+                                <!-- Main-menu -->
+                                <div class="col-xl-10 col-lg-10 col-md-10 col-sm-10" >
+                                    <div class="main-menu f-right d-none d-lg-block">
+                                        <nav class="shift">               
+                                            <ul id="navigation" >                                                                                                                                     
+                                                <li><a name="pagination" href="{% url 'home' %}">Home</a></li>
+                                                <li><a style="cursor: pointer;" onclick="homeRequest('servicesSection');">Services</a></li>
+                                                <li><a style="cursor: pointer;" onclick="homeRequest('aboutSection');">About US</a></li>
+                                                <li><a style="cursor: pointer;" onclick="homeRequest('quickiesSection');">Quickies</a></li>
+                                                <li><a href="#">Blog</a></li>
+                                                <li><a href="{% url 'contact' %}">Contact Us</a></li>
+                                            </ul>
+
+                                        </nav>
+                                    </div>
+                                </div>
+
+                                <!-- Mobile Menu -->
+                                <div class="col-12">
+                                    <div class="mobile_menu d-block d-lg-none" ></div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                </div>
+        </div>
+    </header>
+    <!-- Header End -->
+     
+
+    <!-- Blog Area Start-->
+    <section class="blog_area section-padding">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-lg-8 mb-5 mb-lg-0">
+                        <div class="blog_left_sidebar">
+
+                                {% for result in results %}
+                                    <article class="blog_item">
+                                        <div class="blog_item_img">
+                                            <img class="card-img rounded-0" src="{{ result.image_src }}" alt="">
+                                            <a href="#" class="blog_item_date">
+                                                <h3>{{ result.date.day }}</h3>
+                                                <p style="text-transform:capitalize;">{{ result.date|date:"b" }}</p>
+                                            </a>
+                                        </div>
+        
+                                        <div class="blog_details">
+                                            <a class="" href="{{ result.link }}">
+                                                {% if result.category == "local" %}
+                                                    <h2 name="ellipsable"  style="direction: rtl; text-align: right; height: 80px;">{{result.title}}</h2>
+                                                {% else %}
+                                                    <h2 name="ellipsable" style="direction: ltr; height: 80px;">{{result.title}}</h2>
+                                                {% endif %}                                       
+                                            </a>
+                                            
+                                            {% if result.category == "local" %}
+                                                {% if result.reference == "alchourouk" %}
+                                                    <p name="ellipsable"  style="direction: rtl; text-align: right;  height: 100px;">{{result.text}} ...</p>
+                                                {% else %}
+                                                    <p name="ellipsable"  style="direction: rtl; text-align: right;  height: 100px;">{{result.text}}</p>
+                                                {% endif %}
+                                            {% else %}
+                                                <p name="ellipsable" style="direction: ltr;  height: 100px;">{{result.text}}</p>
+                                            {% endif %}   
+        
+                                            <ul class="blog-info-link">
+                                                {% if result.category == "politics" and result.label == "REAL" %}
+                                                <li><a href="#" style="text-transform:capitalize;"><i class="fa fa-user"></i> {{ result.category }} | <span style="color: rgb(105, 255, 105);">{{ result.label }}</span></a></li>
+                                                {% elif result.category == "politics" and result.label == "FAKE" %}
+                                                <li><a href="#" style="text-transform:capitalize;"><i class="fa fa-user"></i> {{ result.category }} | <span style="color: rgb(255, 62, 62);">{{ result.label }}</span></a></li>
+                                                {% else %}
+                                                <li><a href="#" style="text-transform:capitalize;"><i class="fa fa-user"></i> {{ result.category }}</a></li>
+                                                {% endif %}   
+                                            </ul>
+                                        </div>
+                                    </article>
+                                {% endfor %}
+        
+        
+                                
+                                <div class="blog-pagination justify-content-center d-flex">
+                                        <span class="pagination">
+                                            {% if results.has_previous %}
+                                                <a onclick="searchRequest('{{results.previous_page_number}}')" class=" page-link"><i class="ti-angle-left"></i></a>
+                                                <a onclick="searchRequest('{{results.previous_page_number}}')" class=" page-link">{{ results.previous_page_number }}</a>
+                                            {% endif %}
+                                    
+
+                                            <a class=" page-link active disabled" style="background-color: rgba(204, 204, 204, 0.658);">{{ results.number }}</a> 
+                                                    
+                                    
+                                            {% if results.has_next %}
+                                                <a onclick="searchRequest('{{results.next_page_number}}')" class=" page-link">{{ results.next_page_number }}</a> 
+                                                <a onclick="searchRequest('{{results.next_page_number}}')" class=" page-link"><i class="ti-angle-right"></i></a>
+                                            {% endif %}
+                                        </span>
+                                </div>
+
+    
+
+                                
+        
+        
+                            </div>
+        
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="blog_right_sidebar">
+
+
+                        
+
+                            <aside class="single_sidebar_widget search_widget">
+                                
+                                    <div class="form-group">
+                                        <div class="input-group mb-3">
+                                            {% if  checks.keyword %}
+                                            <input id="s-keyword" type="text" class="form-control" placeholder='Search Keyword'
+                                                onfocus="this.placeholder = ''"
+                                                onblur="this.placeholder = 'Search Keyword'" value="{{checks.keyword}}">
+                                            {% else %}
+                                            <input id="s-keyword" type="text" class="form-control" placeholder='Search Keyword'
+                                                onfocus="this.placeholder = ''"
+                                                onblur="this.placeholder = 'Search Keyword'">
+                                            {% endif %}
+
+                                            <div class="input-group-append">
+                                                <button class="btns" type="button" onclick="searchRequest()"><i class="ti-search"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button name="search" class="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"
+                                         onclick="searchRequest()">Search</a>
+                                
+                            </aside>
+
+                            <aside class="single_sidebar_widget post_category_widget">
+                                <h4 class="widget_title">References</h4>
+                                <ul class="list cat-list">
+                                    <li>
+                                        <div class="d-flex justify-content-between">
+                                                <p>Medium.com</p>
+                                                <div class="primary-radio">
+                                                    {% if  checks.medium %}
+                                                    <input checked id="s-ref-medium" type="checkbox" onclick="searchRequest()">
+                                                    {% else %}
+                                                    <input id="s-ref-medium" type="checkbox" onclick="searchRequest()">
+                                                    {% endif %}
+                                                    <label for="s-ref-medium" ></label>
+                                                </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="d-flex justify-content-between">
+                                                <p>TheOnion.com</p>
+                                                <div class="primary-radio">
+                                                    {% if  checks.theonion %}
+                                                    <input checked id="s-ref-onion" type="checkbox" onclick="searchRequest()">
+                                                    {% else %}
+                                                    <input id="s-ref-onion" type="checkbox" onclick="searchRequest()">
+                                                    {% endif %}
+                                                    <label for="s-ref-onion"></label>
+                                                </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </aside>
+
+                            <aside class="single_sidebar_widget post_category_widget">
+                                <h4 class="widget_title">Categories</h4>
+                                <ul class="list cat-list">
+                                    <li>
+                                        <div class="d-flex justify-content-between">
+                                                <p>Local({{localCount}})</p>
+                                                <div class="primary-checkbox">
+                                                    {% if  checks.local %}
+                                                    <input checked id="s-cat-local" type="checkbox" onclick="searchRequest()">
+                                                    {% else %}
+                                                    <input id="s-cat-local" type="checkbox" onclick="searchRequest()">
+                                                    {% endif %}
+                                                    <label for="s-cat-local"></label>
+                                                </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="d-flex justify-content-between">
+                                                <p>Health({{healthCount}})</p>
+                                                <div class="primary-checkbox">
+                                                    {% if  checks.health %}
+                                                    <input checked id="s-cat-health" type="checkbox" onclick="searchRequest()">
+                                                    {% else %}
+                                                    <input id="s-cat-health" type="checkbox" onclick="searchRequest()">
+                                                    {% endif %}
+                                                    <label for="s-cat-health"></label>
+                                                </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="d-flex justify-content-between">
+                                                <p>Sports({{sportsCount}})</p>
+                                                <div class="primary-checkbox">
+                                                    {% if  checks.sports %}
+                                                    <input checked id="s-cat-sports" type="checkbox" onclick="searchRequest()">
+                                                    {% else %}
+                                                    <input id="s-cat-sports" type="checkbox" onclick="searchRequest()">
+                                                    {% endif %}
+                                                    <label for="s-cat-sports"></label>
+                                                </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="d-flex justify-content-between" style="display: inline;">
+                                                <p>Politics({{politicsCount}})</p>
+                                                <div class="primary-checkbox">
+                                                    {% if  checks.politics %}
+                                                    <input checked id="s-cat-politics" type="checkbox" onclick="searchRequest()">
+                                                    {% else %}
+                                                    <input id="s-cat-politics" type="checkbox" onclick="searchRequest()">
+                                                    {% endif %}
+                                                    <label for="s-cat-politics"></label>
+                                                </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="d-flex justify-content-between">
+                                                <p>Technology({{technologyCount}})</p>
+                                                <div class="primary-checkbox">
+                                                    {% if  checks.technology %}
+                                                    <input checked id="s-cat-tech" type="checkbox" onclick="searchRequest()">
+                                                    {% else %}
+                                                    <input id="s-cat-tech" type="checkbox" onclick="searchRequest()">
+                                                    {% endif %}
+                                                    <label for="s-cat-tech"></label>
+                                                </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="d-flex justify-content-between">
+                                                <p>Entertainment({{entertainmentsCount}})</p>
+                                                <div class="primary-checkbox">
+                                                    {% if  checks.entertainment %}
+                                                    <input checked id="s-cat-enter" type="checkbox" onclick="searchRequest()">
+                                                    {% else %}
+                                                    <input id="s-cat-enter" type="checkbox" onclick="searchRequest()">
+                                                    {% endif %}
+                                                    <label for="s-cat-enter"></label>
+                                                </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </aside>
+
+                        <aside class="single_sidebar_widget popular_post_widget">
+                            <h3 class="widget_title">Recent Post</h3>
+
+                            {% for recent in recents %}
+                            <div class="media post_item">
+                                <img src="{{ recent.image_src }}" alt="post" style="width: 80px; height: 80px;">
+
+                                <div class="media-body">
+                                    <a href="{{recent.link}}">
+
+                                        {% if recent.category == "local" %}
+                                            <h3 name="ellipsable"  style="direction: rtl; text-align: right;  height: 50px;">{{recent.title}}</h3>
+                                        {% else %}
+                                            <h3 name="ellipsable" style="direction: ltr;  height: 50px;">{{recent.title}}</h3>
+                                        {% endif %}   
+                                    </a>
+                                    <p>{{recent.date|date:"F d, Y"}}</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </aside>
+
+                        <aside class="single_sidebar_widget newsletter_widget">
+                            <h4 class="widget_title">Newsletter</h4>
+
+                            <form action="#">
+                                <div class="form-group">
+                                    <input type="email" class="form-control" onfocus="this.placeholder = ''"
+                                        onblur="this.placeholder = 'Enter email'" placeholder='Enter email' required>
+                                </div>
+                                <button class="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"
+                                    type="submit">Subscribe</button>
+                            </form>
+                        </aside>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <!-- Blog Area End-->
+
+
+    <!-- Footer Start-->
+    <footer>
+        <div class="footer-area footer-padding footer-bg" data-background="{% static 'news/img/footer/footer_bg.jpg' %}">
+            <div class="container">
+                <div class="row d-flex justify-content-between">
+                    <div class="col-xl-3 col-lg-3 col-md-5 col-sm-6">
+                    <div class="single-footer-caption mb-50">
+
+                        <div class="single-footer-caption mb-30">
+                            <!-- logo -->
+                            <div class="footer-logo">
+                                <a href="{% url 'home' %}"><img src="{% static 'news/img/logo/logo2_footer.png' %}" alt=""></a>
+                            </div>
+
+                            <div class="footer-tittle">
+                                <div class="footer-pera">
+                                    <p>NewNew is a leading initiative in serving news. Insuring easy access and authentic communications, we serve you.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    </div>
+                    <div class="col-xl-2 col-lg-3 col-md-3 col-sm-5">
+                        <div class="single-footer-caption mb-50">
+                            <div class="footer-tittle">
+                                <h4>Quick Links</h4>
+                                <ul>
+                                    <li><a style="cursor: pointer;" onclick="homeRequest('servicesSection');">Services</a></li>
+                                    <li><a style="cursor: pointer;" onclick="homeRequest('aboutSection');">About Us</a></li>
+                                    <li><a style="cursor: pointer;" onclick="homeRequest('quickiesSection');">Quickies</a></li>
+                                    <li><a href="{% url 'contact' %}">Contact Us</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-7">
+                        <div class="single-footer-caption mb-50">
+                            <div class="footer-tittle">
+                                <h4>New News</h4>
+                                <ul>
+                                    <li><a href="#">Blog</a></li>
+                                    <li><a href="http://127.0.0.1:8000/blog/?category=local">Local</a></li>
+                                    <li><a href="http://127.0.0.1:8000/blog/?category=politics&reference=medium+theonion">Politics</a></li>
+                                    <li><a href="http://127.0.0.1:8000/blog/?category=technology&reference=medium+theonion">Technology</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-5 col-sm-7">
+                        <div class="single-footer-caption mb-50">
+                            <div class="footer-tittle">
+                                <h4>Support</h4>
+                                <ul>
+                                <li><a href="#">Frequently Asked Questions</a></li>
+                                <li><a href="#">Terms & Conditions</a></li>
+                                <li><a href="#">Privacy Policy</a></li>
+                                <li><a href="#">Report an Issue</a></li>
+                            </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Footer bottom -->
+                <div class="row pt-padding">
+                <div class="col-xl-7 col-lg-7 col-md-7">
+                    <div class="footer-copy-right">
+                        <p>
+                            Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This service is made with 
+                            <i class="ti-heart" aria-hidden="true"></i> by <a href="#">Aladin Sridi</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-xl-5 col-lg-5 col-md-5">
+                        <!-- social -->
+                        <div class="footer-social f-right">
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-behance"></i></a>
+                            <a href="#"><i class="fas fa-globe"></i></a>
+                        </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Footer End-->    
+    
+
+    <!-- JS here -->
+	
+    <script src="{% static 'news/js/vendor/modernizr-3.5.0.min.js' %}"></script>
+    <script src="{% static 'news/js/vendor/jquery-1.12.4.min.js' %}"></script>
+    <script src="{% static 'news/js/popper.min.js' %}"></script>
+    <script src="{% static 'news/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'news/js/jquery.slicknav.min.js' %}"></script>
+    <script src="{% static 'news/js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'news/js/slick.min.js' %}"></script>
+    <script src="{% static 'news/js/wow.min.js' %}"></script>
+    <script src="{% static 'news/js/animated.headline.js' %}"></script>
+    <script src="{% static 'news/js/jquery.magnific-popup.js' %}"></script>
+    <script src="{% static 'news/js/jquery.scrollUp.min.js' %}"></script>
+    <script src="{% static 'news/js/jquery.nice-select.min.js' %}"></script>
+    <script src="{% static 'news/js/jquery.sticky.js' %}"></script>
+    <script src="{% static 'news/js/contact.js' %}"></script>
+    <script src="{% static 'news/js/jquery.form.js' %}"></script>
+    <script src="{% static 'news/js/jquery.validate.min.js' %}"></script>
+    <script src="{% static 'news/js/mail-script.js' %}"></script>
+    <script src="{% static 'news/js/jquery.ajaxchimp.min.js' %}"></script>
+    <script src="{% static 'news/js/plugins.js' %}"></script>
+    <script src="{% static 'news/js/main.js' %}"></script>   
+
+</body>
+</html>

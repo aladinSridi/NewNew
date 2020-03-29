@@ -1,0 +1,509 @@
+{% load static %}
+<!doctype html>
+<html class="no-js" lang="zxx">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>NewNew</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="SHORTCUT ICON" type="image/x-icon" href="{% static 'news/img/favicon.ico' %}">
+
+        <!-- CSS here -->
+            <link rel="stylesheet" href="{% static 'news/css/bootstrap.min.css' %}">
+            <link rel="stylesheet" href="{% static 'news/css/owl.carousel.min.css' %}">
+            <link rel="stylesheet" href="{% static 'news/css/flaticon.css' %}">
+            <link rel="stylesheet" href="{% static 'news/css/slicknav.css' %}">
+            <link rel="stylesheet" href="{% static 'news/css/animate.min.css' %}">
+            <link rel="stylesheet" href="{% static 'news/css/magnific-popup.css' %}">
+            <link rel="stylesheet" href="{% static 'news/css/fontawesome-all.min.css' %}">
+            <link rel="stylesheet" href="{% static 'news/css/themify-icons.css' %}">
+            <link rel="stylesheet" href="{% static 'news/css/slick.css' %}">
+            <link rel="stylesheet" href="{% static 'news/css/nice-select.css' %}">
+            <link rel="stylesheet" href="{% static 'news/css/style.css' %}">
+
+
+        <!-- JS here -->
+        <script>
+            const sleep = (milliseconds) => {
+                return new Promise(resolve => setTimeout(resolve, milliseconds))
+            }
+            
+            function getAnchors(){
+                sleep(200).then(() => {
+                    headerSection = document.getElementById('headerSection').getBoundingClientRect().top;
+                    servicesSection = document.getElementById('servicesSection').getBoundingClientRect().top;
+                    aboutSection = document.getElementById('aboutSection').getBoundingClientRect().top;
+                    quickiesSection = document.getElementById('quickiesSection').getBoundingClientRect().top;
+
+                    const position = "{{ position|safe }}";
+                    if(position != "") {
+                        fixIndexScrolling(position)
+                    }
+                    
+                    ellipsizeTextBox('ellipsable')
+                })
+            }
+
+            function fixIndexScrolling (position){
+                    if(position=='headerSection') {window.scrollTo(0, headerSection - 222);}
+                    if(position=='servicesSection') {window.scrollTo(0, servicesSection - 222);}
+                    if(position=='aboutSection') {window.scrollTo(0, aboutSection - 222);}
+                    if(position=='quickiesSection') {window.scrollTo(0, quickiesSection - 222);}
+            }
+
+            function ellipsizeTextBox(id) {
+                var elts = document.getElementsByName(id);
+                var i;
+                for (i = 0; i < elts.length; i++) {
+                    var wordArray = elts[i].innerHTML.split(' ');
+                    while(elts[i].scrollHeight > elts[i].offsetHeight) {
+                        wordArray.pop();
+                        elts[i].innerHTML = wordArray.join(' ') + '...';
+                    }
+                } 
+  
+            }
+
+            function postForm(path, params, method) {
+                method = method || 'post';
+
+                var form = document.createElement('form');
+                form.setAttribute('method', method);
+                form.setAttribute('action', path);
+
+                for (var key in params) {
+                    if (params.hasOwnProperty(key)) {
+                        var hiddenField = document.createElement('input');
+                        hiddenField.setAttribute('type', 'hidden');
+                        hiddenField.setAttribute('name', key);
+                        hiddenField.setAttribute('value', params[key]);
+
+                        form.appendChild(hiddenField);
+                    }
+                }
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+
+            function searchRequest() {
+                filter = {}
+                isPostable = false;
+
+                keyword = document.getElementById("index-s-keyword").value;
+                if(keyword != "" && $('#index-s-select').val() != null) { 
+                    filter['keyword'] = keyword;
+                    filter['category'] = $('#index-s-select').val();
+                    filter['reference']="medium theonion"
+                    isPostable = true;
+                }
+
+                if(isPostable) {
+                    postForm('http://127.0.0.1:8000/blog/', filter, 'GET');
+                }
+            }
+
+            
+        </script>
+       
+    </head>
+
+   <body onload="getAnchors();">
+    
+    <!-- Preloader Start -->
+    <div id="preloader-active">
+        <div class="preloader d-flex align-items-center justify-content-center">
+            <div class="preloader-inner position-relative">
+                <div class="preloader-circle"></div>
+                <div class="preloader-img pere-text">
+                    <img src="{% static 'news/img/logo/pre-logo.png' %}" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Preloader Start -->
+
+
+    <!-- Header Start -->
+    <header>
+       <div id="headerSection" class="header-area" >
+            <div class="main-header " >
+               <div class="header-bottom  header-sticky" >
+                    <div class="container" >
+                        <div class="row align-items-center" >
+                            <!-- Logo -->
+                            <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2" >
+                                <div class="logo">
+                                  <a href="{% url 'home' %}"><img src="{% static 'news/img/logo/logo.png' %}" alt=""></a>
+                                </div>
+                            </div>
+
+                            <!-- Main-menu -->
+                            <div class="col-xl-10 col-lg-10 col-md-10 col-sm-10" >
+                                <div class="main-menu f-right d-none d-lg-block">
+                                    <nav class="shift">               
+                                        <ul id="navigation" >                                                                                                                                     
+                                            <li><a style="cursor: pointer;" onclick="fixIndexScrolling('headerSection')">Home</a></li>
+                                            <li><a style="cursor: pointer;" onclick="fixIndexScrolling('servicesSection')">Services</a></li>
+                                            <li><a style="cursor: pointer;" onclick="fixIndexScrolling('aboutSection')">About US</a></li>
+                                            <li><a style="cursor: pointer;" onclick="fixIndexScrolling('quickiesSection')">Quickies</a></li>
+                                            <li><a href="{% url 'blog' %}">Blog</a></li>
+                                            <li><a href="{% url 'contact' %}">Contact Us</a></li>
+                                        </ul>
+
+                                    </nav>
+                                </div>
+                            </div>
+
+                            <!-- Mobile Menu -->
+                            <div class="col-12">
+                                <div class="mobile_menu d-block d-lg-none" ></div>
+                            </div>
+                        </div>
+                    </div>
+               </div>
+            </div>
+       </div>
+    </header>
+    <!-- Header End -->
+
+
+    <main>
+
+        <!-- Slider Area Start-->
+        <div id="searchSection" class="slider-area ">
+            <!-- Mobile Menu -->
+                <div class="hero-overly  slider-height d-flex align-items-center" data-background="{% static 'news/img/hero/h1_hero.jpg' %}">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-xl-9 col-lg-9 col-md-9">
+                                <div class="hero__caption">
+                                    <h1>Find your <span>New News!</span> </h1>
+                                    <p>What do you want to know?</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Search Box -->
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <!-- form -->
+                                <form class="search-box">
+                                    <div class="input-form mb-30">
+                                        <input id="index-s-keyword" type="text" placeholder="What interests you?">
+                                    </div>
+                                    <div class="select-form mb-30">
+                                        <div class="">
+                                            <select name="select" id="index-s-select">
+                                                <option value="" disabled selected>Categories</option>
+                                                <option value="local health sports politics technology entertainment">All</option>
+                                                <option value="local">Local</option>
+                                                <option value="health">Health</option>
+                                                <option value="sports">Sports</option>
+                                                <option value="politics">Politics</option>
+                                                <option value="technology">Technology</option>
+                                                <option value="entertainment">Entertainment</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="search-form mb-30">
+                                        <a style="cursor: pointer;" onclick="searchRequest()">Search</a>
+                                    </div>
+                                    
+                                </form>
+                                
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+        </div>
+        <!-- Slider Area End-->
+
+
+        <!-- Services Start -->
+        <div id="servicesSection" class="section-padding">
+            <div class="container">
+                <div class="tittle-agileinfo">
+                    <h3>Featured Services</h3>
+                </div>
+                
+                <div class="w3_agileits_services_grids">
+
+                    <div class="row">
+                                <div class="col-md-6 w3_agileits_services_grid">
+                                    <div class="w3_agileits_services_grid_agile">
+                                        <div class="w3_agileits_services_grid_1">
+                                            <i class="fa fa-link" aria-hidden="true"></i>
+                                        </div>
+                                        <h3>Aggregation</h3>
+                                        <p>Tired of visiting multiple websites ?</p>
+                                        <p>We offer a centralized gathering of all types of interesting news.</p>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 w3_agileits_services_grid">
+                                    <div class="w3_agileits_services_grid_agile">
+                                        <div class="w3_agileits_services_grid_1">
+                                            <i class="fa fa-puzzle-piece" aria-hidden="true"></i>
+                                        </div>
+                                        <h3>Classification</h3>
+                                        <p>Unable to find exactly what you want ?</p>
+                                        <p>We provide a well developed categorization of all incoming news.</p>
+                                    </div>
+                                </div>
+                
+                                <div class="col-md-6 w3_agileits_services_grid">
+                                    <div class="w3_agileits_services_grid_agile">
+                                        <div class="w3_agileits_services_grid_1">
+                                            <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+                                        </div>
+                                        <h3>Authenticity</h3>
+                                        <p>Getting sick of yellow journalism ?</p>
+                                        <p>We make the authenticity of all our political news clear to you.</p>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 w3_agileits_services_grid">
+                                    <div class="w3_agileits_services_grid_agile">
+                
+                                        <div class="w3_agileits_services_grid_1">
+                                            <i class="fa fa-female" aria-hidden="true"></i>
+                                        </div>
+                                        <h3>Personalization</h3>
+                                        <p>Want something that is unique to you ?</p>
+                                        <p>We offer an amazing experience tailored to your wants and needs.</p>
+                
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 w3_agileits_services_grid">
+                                        <div class="w3_agileits_services_grid_agile">
+                                            <div class="w3_agileits_services_grid_1">
+                                                <i class="fa fa-chart-pie" aria-hidden="true"></i>
+                                            </div>
+                                            <h3>Statistics</h3>
+                                            <p>Not yet implemented.</p>
+                                        </div>
+                                </div>
+
+                                <div class="col-md-6 w3_agileits_services_grid">
+                                    <div class="w3_agileits_services_grid_agile">
+                                        <div class="w3_agileits_services_grid_1">
+                                            <i class="fa fa-chart-line" aria-hidden="true"></i>
+                                        </div>
+                                        <h3>Analyse</h3>
+                                        <p>Not yet implemented.</p>
+                                    </div>
+                                </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Services End -->
+
+
+        <!-- About Us Start -->
+        <div id="aboutSection" class="testimonial-area testimonial-padding" data-background="{% static 'news/img/about/about_bg.jpg' %}">
+            <div class="container ">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-xl-11 col-lg-11 col-md-9">
+                        <div class="h1-testimonial-active">
+                            <!-- Single Testimonial -->
+                            <div class="single-testimonial text-center">
+                                <!-- Testimonial Content -->
+                                <div class="testimonial-caption ">
+                                    <div class="testimonial-top-cap">
+                                        <img src="{% static 'news/img/icon/about.png' %}"  alt="">
+                                        <p>We’re NewNew, and we are a leading initiative in serving news. 
+                                            We believe in easy lifestyles and authenticity, preparing them in house, and serving them fresh to you.</p>
+                                    </div>
+
+                                    <!-- founder -->
+                                    
+                                    <div class="testimonial-founder d-flex align-items-center justify-content-center">
+                                        <div class="founder-img">
+                                            <img src="{% static 'news/img/about/me.png' %}"  alt="">
+                                        </div>
+                                        <div class="founder-text">
+                                            <span>Aladin Sridi</span>
+                                            <p>Founder</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- About Us End -->
+
+
+        <!-- Quickies Start -->
+        <div id="quickiesSection" class="home-blog-area section-padding">
+            <div class="container">
+                <!-- Section Tittle -->
+                <div class="row">
+                    <div class="col-lg-12">
+
+                        <div class="tittle-agileinfo">
+                            <h3>Recent News</h3>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    {% for recent in recents %}
+                        <div class="col-xl-6 col-lg-6 col-md-6">
+                            <div class="home-blog-single mb-30">
+                                <div class="blog-img-cap">
+                                    <div class="blog-img">
+                                        <img src="{{ recent.image_src }}" alt="">
+                                    </div>
+    
+                                    <div class="blog-cap">
+                                        <p style="text-transform:capitalize;"> |   {{ recent.category }}</p>
+                                        {% if recent.category == "local" %}
+                                            <h3><a name="ellipsable" href="{{ recent.link }}" style="direction: rtl; text-align: right;">{{recent.title}}</a></h3>
+                                        {% else %}
+                                            <h3><a name="ellipsable" href="{{ recent.link }}" style="direction: ltr;">{{recent.title}}</a></h3>
+                                        {% endif %}                                       
+                                        <a href="{{ recent.link }}" class="more-btn">Read more »</a>
+                                    </div>
+                                </div>
+                                <div class="blog-date text-center">
+                                    <span>{{ recent.date.day }}</span>
+                                    <p style="text-transform:capitalize;">{{ recent.date|date:"b" }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+        </div>
+        <!-- Quickies End -->
+
+    </main>
+
+
+    <!-- Footer Start-->
+    <footer>
+        <div class="footer-area footer-padding footer-bg" data-background="{% static 'news/img/footer/footer_bg.jpg' %}">
+            <div class="container">
+                <div class="row d-flex justify-content-between">
+                    <div class="col-xl-3 col-lg-3 col-md-5 col-sm-6">
+                       <div class="single-footer-caption mb-50">
+
+                         <div class="single-footer-caption mb-30">
+                              <!-- logo -->
+                             <div class="footer-logo">
+                                 <a href="#headerSection"><img src="{% static 'news/img/logo/logo2_footer.png' %}" alt=""></a>
+                             </div>
+
+                             <div class="footer-tittle">
+                                 <div class="footer-pera">
+                                     <p>NewNew is a leading initiative in serving news. Insuring easy access and authentic communications, we serve you.</p>
+                                </div>
+                             </div>
+                         </div>
+
+                       </div>
+                    </div>
+                    <div class="col-xl-2 col-lg-3 col-md-3 col-sm-5">
+                        <div class="single-footer-caption mb-50">
+                            <div class="footer-tittle">
+                                <h4>Quick Links</h4>
+                                <ul>
+                                    <li><a style="cursor: pointer;" onclick="fixIndexScrolling('servicesSection')">Services</a></li>
+                                    <li><a style="cursor: pointer;" onclick="fixIndexScrolling('aboutSection')">About Us</a></li>
+                                    <li><a style="cursor: pointer;" onclick="fixIndexScrolling('quickiesSection')">Quickies</a></li>
+                                    <li><a href="{% url 'contact' %}">Contact Us</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-7">
+                        <div class="single-footer-caption mb-50">
+                            <div class="footer-tittle">
+                                <h4>New News</h4>
+                                <ul>
+                                    <li><a href="{% url 'blog' %}">Blog</a></li>
+                                    <li><a href="http://127.0.0.1:8000/blog/?category=local">Local</a></li>
+                                    <li><a href="http://127.0.0.1:8000/blog/?category=politics&reference=medium+theonion">Politics</a></li>
+                                    <li><a href="http://127.0.0.1:8000/blog/?category=technology&reference=medium+theonion">Technology</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-5 col-sm-7">
+                        <div class="single-footer-caption mb-50">
+                            <div class="footer-tittle">
+                                <h4>Support</h4>
+                                <ul>
+                                 <li><a href="#">Frequently Asked Questions</a></li>
+                                 <li><a href="#">Terms & Conditions</a></li>
+                                 <li><a href="#">Privacy Policy</a></li>
+                                 <li><a href="#">Report an Issue</a></li>
+                             </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Footer bottom -->
+                <div class="row pt-padding">
+                 <div class="col-xl-7 col-lg-7 col-md-7">
+                    <div class="footer-copy-right">
+                         <p>
+                            Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This service is made with 
+                            <i class="ti-heart" aria-hidden="true"></i> by <a href="#">Aladin Sridi</a>
+                        </p>
+                    </div>
+                 </div>
+                  <div class="col-xl-5 col-lg-5 col-md-5">
+                        <!-- social -->
+                        <div class="footer-social f-right">
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-behance"></i></a>
+                            <a href="#"><i class="fas fa-globe"></i></a>
+                        </div>
+                 </div>
+             </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Footer End-->
+
+
+	<!-- JS here -->
+	
+        <script src="{% static 'news/js/vendor/modernizr-3.5.0.min.js' %}"></script>
+        <script src="{% static 'news/js/vendor/jquery-1.12.4.min.js' %}"></script>
+        <script src="{% static 'news/js/popper.min.js' %}"></script>
+        <script src="{% static 'news/js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'news/js/jquery.slicknav.min.js' %}"></script>
+        <script src="{% static 'news/js/owl.carousel.min.js' %}"></script>
+        <script src="{% static 'news/js/slick.min.js' %}"></script>
+        <script src="{% static 'news/js/wow.min.js' %}"></script>
+        <script src="{% static 'news/js/animated.headline.js' %}"></script>
+        <script src="{% static 'news/js/jquery.magnific-popup.js' %}"></script>
+        <script src="{% static 'news/js/jquery.scrollUp.min.js' %}"></script>
+        <script src="{% static 'news/js/jquery.nice-select.min.js' %}"></script>
+        <script src="{% static 'news/js/jquery.sticky.js' %}"></script>
+        <script src="{% static 'news/js/contact.js' %}"></script>
+        <script src="{% static 'news/js/jquery.form.js' %}"></script>
+        <script src="{% static 'news/js/jquery.validate.min.js' %}"></script>
+        <script src="{% static 'news/js/mail-script.js' %}"></script>
+        <script src="{% static 'news/js/jquery.ajaxchimp.min.js' %}"></script>
+        <script src="{% static 'news/js/plugins.js' %}"></script>
+        <script src="{% static 'news/js/main.js' %}"></script>       
+
+    </body>
+</html>
