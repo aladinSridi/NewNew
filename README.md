@@ -1,7 +1,9 @@
-NewNew is a web platform for serving news accompanied by a machine learning algorithm to detect authenticity. 
+# NewNew 
+**is a web platform for serving news accompanied by a machine learning algorithm to detect authenticity.**
 
 
 [Module - Authenticity Detection]
+---
 - This is where the machine learning algorithm resides.
 - The algorithm itself is devided to two sub-modules:
     + authenticityDetector.py : Responsible for the learning process returning a tfidf_vectorizer and a Passive Aggressive Classifier(PAC)
@@ -15,6 +17,7 @@ NewNew is a web platform for serving news accompanied by a machine learning algo
 
 
 [News_Aggregarot_Website]
+---
 - This is where the website resides
 - Backend:
     + Python v3.6.7
@@ -25,6 +28,7 @@ NewNew is a web platform for serving news accompanied by a machine learning algo
 
 
 [Usage]
+---
 - /home     : Initial Page
 - /blog     : Aggregation Page
 - /contact  : Contact Page
