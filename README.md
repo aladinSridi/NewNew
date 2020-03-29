@@ -20,11 +20,23 @@
 ---
 - This is where the website resides
 - Backend:
-    + Python v3.6.7
-    + Django v3.0.4
+    + Python v3
+    + Django v2
     + SQLITE v3
 - Frontend:
     + Django templates
+
+
+[Local Set Up]
+---
+- Clone the repositry
+- cd News_Aggregarot_Website
+- python3 manage.py runserver
+
+
+[Remote Hosting Service]
+---
+- visit: https://aladinsridi.pythonanywhere.com/
 
 
 [Usage]
