@@ -90,8 +90,14 @@ def blog(request):
             print('Public IP Address detected')
             url = 'http://ipinfo.io/'+ip+'/json'
             response = urlopen(url)
-            data = json.load(response)
-            city = data['city']
+            charset_encoding = response.info().get_content_charset()
+            response = response.read().decode(charset_encoding)
+            data = json.loads(response)
+            city = data['timezone'].split("/")[1]
+            if city == "Tunis":
+                city = "Tunisia"
+            if city == "Algiers":
+                city = "Algeria"
         else:
             print('Private IP Address detected')
             city = "Tunisia"                                                    # Private IP Address Location  <-------
