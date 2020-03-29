@@ -1,5 +1,5 @@
 # NewNew 
-**is a web platform for serving news accompanied by a machine learning algorithm to detect authenticity.**
+**NewNew is a web platform for serving news accompanied by a machine learning algorithm to detect authenticity.**
 
 
 [Module - Authenticity Detection]
